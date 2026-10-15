@@ -139,7 +139,6 @@ let drawing = false;
 let activePointerId = null;
 let imageToken = 0;
 
-// Cada imagem possui sua própria lista de caixas.
 const annotations = new Map();
 
 function msg(text) {
@@ -207,7 +206,6 @@ function load() {
   nextImage.onload = () => {
     URL.revokeObjectURL(url);
 
-    // Ignora carregamentos antigos ao navegar rapidamente.
     if (token !== imageToken) return;
 
     image = nextImage;
@@ -237,7 +235,6 @@ function load() {
   nextImage.src = url;
 }
 
-// Dimensiona o canvas mantendo a proporção original da imagem.
 function fit() {
   if (!image) return;
 
@@ -260,8 +257,6 @@ function fit() {
   );
 }
 
-// Converte o centro YOLO para o canto superior esquerdo
-// somente para a renderização da caixa.
 function draw() {
   if (!image) return;
 
@@ -278,7 +273,7 @@ function draw() {
     ctx.lineWidth = 2;
     ctx.strokeRect(x, y, w, h);
 
-    // O nome pertence à anotação, não ao campo atual.
+
     const label = `${box.id}: ${box.name ?? 'classe'}`;
 
     ctx.font = '14px Arial';
@@ -299,7 +294,7 @@ function draw() {
   });
 }
 
-// Retorna coordenadas normalizadas entre 0 e 1.
+
 function pos(event) {
   const rect = canvas.getBoundingClientRect();
 
@@ -438,9 +433,7 @@ window.addEventListener('resize', () => {
 });
 
 function txtFor(boxes) {
-  // O formato YOLO exige apenas:
-  // class_id center_x center_y width height
-  return boxes.map(box =>
+    return boxes.map(box =>
     `${box.id} ${box.x.toFixed(6)} ` +
     `${box.y.toFixed(6)} ${box.w.toFixed(6)} ` +
     `${box.h.toFixed(6)}`
@@ -484,9 +477,7 @@ saveAllBtn.addEventListener('click', () => {
 
   saveCurrentAnnotations();
 
-  // Alguns navegadores bloqueiam downloads múltiplos.
-  // Pode ser necessário autorizar os downloads no navegador.
-  files.forEach(file => {
+    files.forEach(file => {
     const imageBoxes = annotations.get(file.name) || [];
 
     download(
